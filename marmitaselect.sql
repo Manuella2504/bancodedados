@@ -1,8 +1,8 @@
 USE RESTAURANTES;
 
+/*================================================= SELECT SIMPLES =================================================*/
+
 SELECT * FROM CLIENTE;
-
-
 
 SELECT * FROM MARMITA WHERE preco = 15.00;
 
@@ -21,11 +21,9 @@ SELECT * FROM CLIENTE WHERE endereco = 'Centro';
 SELECT * FROM ENTREGADOR WHERE empresa_id = 1;
 
 
-
 SELECT * FROM MARMITA WHERE tamanho IN ('Pequena', 'Média', 'Grande');
 
 SELECT * FROM ENTREGADOR WHERE empresa_id NOT IN (2, 3, 5);
-
 
 
 SELECT * FROM ENTREGADOR WHERE celular IS NULL;
@@ -33,9 +31,6 @@ SELECT * FROM ENTREGADOR WHERE celular IS NULL;
 SELECT * FROM CLIENTE WHERE endereco IS NOT NULL;
 
 SELECT * FROM PEDIDO WHERE taxa_entrega IS NULL;
-
-
-
 
 
 SELECT * FROM MARMITA WHERE preco BETWEEN 10.00 AND 25.00;
@@ -53,8 +48,6 @@ SELECT * FROM MARMITA WHERE preco > 20.00 AND tamanho = 'Grande';
 SELECT * FROM PEDIDO WHERE status = 'Entregue' OR status = 'Em andamento';
 
 
-
-
 SELECT MAX(preco) FROM MARMITA;
 
 SELECT MIN(preco) FROM MARMITA;
@@ -67,6 +60,99 @@ SELECT COUNT(*) FROM PEDIDO;
 
 SELECT SUM(preco) FROM MARMITA;
 
+/*================================================= SELECT + GROUP BY =================================================*/
+
+SELECT 
+    id_entregador,
+    COUNT(*) AS total_pedidos
+FROM 
+    PEDIDO
+GROUP BY 
+    id_entregador;
+
+SELECT 
+    status,
+    COUNT(*) AS total_pedidos
+FROM 
+    PEDIDO
+GROUP BY 
+    status;
+
+SELECT 
+    id_pedido,
+    SUM(quantidade) AS total_marmitas
+FROM 
+    ITEM_PEDIDO
+GROUP BY 
+    id_pedido;
+
+SELECT 
+    id_pedido,
+    MAX(quantidade) AS maior_quantidade_item
+FROM 
+    ITEM_PEDIDO
+GROUP BY 
+    id_pedido;
+
+SELECT 
+    id_pedido,
+    MIN(quantidade) AS menor_quantidade_item
+FROM 
+    ITEM_PEDIDO
+GROUP BY 
+    id_pedido;
+
+SELECT 
+    id_pedido,
+    AVG(quantidade) AS media_marmitas_por_item
+FROM 
+    ITEM_PEDIDO
+GROUP BY 
+    id_pedido;
+
+SELECT 
+    c.telefone,
+    COUNT(p.id_pedido) AS total_pedidos
+FROM 
+    CLIENTE c
+INNER JOIN 
+    PEDIDO p ON c.id_cliente = p.id_cliente
+GROUP BY 
+    c.id_cliente, c.telefone
+HAVING 
+    COUNT(p.id_pedido) > 3;
+
+SELECT 
+    id_entregador,
+    COUNT(*) AS total_entregas
+FROM 
+    PEDIDO
+GROUP BY 
+    id_entregador
+HAVING 
+    COUNT(*) > 5;
+
+SELECT 
+    MONTH(data_nascimento) AS mes_nascimento,
+    COUNT(*) AS total_clientes
+FROM 
+    CLIENTE
+GROUP BY 
+    MONTH(data_nascimento)
+ORDER BY 
+    mes_nascimento;
+
+SELECT 
+    id_pedido,
+    SUM(quantidade) AS total_marmitas
+FROM 
+    ITEM_PEDIDO
+GROUP BY 
+    id_pedido
+HAVING 
+    SUM(quantidade) > 10;
+
+/*================================================= SELECT + JOIN =================================================*/
 
 SELECT 
     p.id_pedido,
